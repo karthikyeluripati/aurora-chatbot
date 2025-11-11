@@ -1,5 +1,5 @@
 // Configuration
-const API_URL = 'http://localhost:8000';
+const API_URL = 'https://aurora-chatbot-7lwl.onrender.com';
 
 // State
 let chatHistory = [];
