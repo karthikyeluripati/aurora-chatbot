@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurora Concierge Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'aurora': {
+                            50: '#f0f9ff',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .message-fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .typing-indicator span {
+            animation: blink 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes blink {
+            0%, 60%, 100% { opacity: 0.3; }
+            30% { opacity: 1; }
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .hover-lift {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-sparkles text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold">Aurora Intelligence</h1>
+                        <p class="text-sm text-white/80">Member Insights at Your Fingertips</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-right">
+                        <p class="text-xs text-white/60">Connected Members</p>
+                        <p class="text-lg font-semibold" id="memberCount">Loading...</p>
+                    </div>
+                    <button onclick="showStats()" class="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition">
+                        <i class="fas fa-chart-bar mr-2"></i>Stats
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Sidebar: Quick Actions -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-xl shadow-lg p-6 sticky top-6">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-bolt text-yellow-500 mr-2"></i>
+                        Quick Insights
+                    </h2>
+
+                    <!-- Member Selector -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Select Member</label>
+                        <select id="memberSelect" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" onchange="updateSuggestedQuestions()">
+                            <option value="">All Members</option>
+                            <option value="Layla Kawaguchi">Layla Kawaguchi</option>
+                            <option value="Vikram Desai">Vikram Desai</option>
+                            <option value="Amina Van Den Berg">Amina Van Den Berg</option>
+                            <option value="Sophia Al-Farsi">Sophia Al-Farsi</option>
+                            <option value="Fatima El-Tahir">Fatima El-Tahir</option>
+                            <option value="Armand Dupont">Armand Dupont</option>
+                            <option value="Hans Müller">Hans Müller</option>
+                            <option value="Lorenzo Cavalli">Lorenzo Cavalli</option>
+                            <option value="Lily O'Sullivan">Lily O'Sullivan</option>
+                            <option value="Thiago Monteiro">Thiago Monteiro</option>
+                        </select>
+                    </div>
+
+                    <!-- Suggested Questions -->
+                    <div class="mb-6">
+                        <h3 class="text-sm font-semibold text-gray-700 mb-3">Popular Questions</h3>
+                        <div id="suggestedQuestions" class="space-y-2">
+                            <!-- Will be populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Categories -->
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-700 mb-3">Categories</h3>
+                        <div class="space-y-2">
+                            <button onclick="quickAsk('travel')" class="w-full text-left px-4 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-lg transition hover-lift flex items-center">
+                                <i class="fas fa-plane mr-2"></i>
+                                <span>Travel Plans</span>
+                            </button>
+                            <button onclick="quickAsk('dining')" class="w-full text-left px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg transition hover-lift flex items-center">
+                                <i class="fas fa-utensils mr-2"></i>
+                                <span>Dining Preferences</span>
+                            </button>
+                            <button onclick="quickAsk('preferences')" class="w-full text-left px-4 py-2 bg-green-50 hover:bg-green-100 text-green-700 rounded-lg transition hover-lift flex items-center">
+                                <i class="fas fa-heart mr-2"></i>
+                                <span>Preferences</span>
+                            </button>
+                            <button onclick="quickAsk('bookings')" class="w-full text-left px-4 py-2 bg-orange-50 hover:bg-orange-100 text-orange-700 rounded-lg transition hover-lift flex items-center">
+                                <i class="fas fa-calendar mr-2"></i>
+                                <span>Recent Bookings</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Chat Area -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden" style="height: calc(100vh - 200px);">
+                    <!-- Chat Messages -->
+                    <div id="chatMessages" class="p-6 overflow-y-auto" style="height: calc(100% - 80px);">
+                        <!-- Welcome Message -->
+                        <div class="text-center py-12">
+                            <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-comments text-white text-3xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Welcome to Aurora Intelligence</h3>
+                            <p class="text-gray-600 max-w-md mx-auto">
+                                Ask me anything about your VIP members. I can help you with travel plans, preferences, dining history, and more.
+                            </p>
+                            <div class="mt-6 text-sm text-gray-500">
+                                <p>💡 Try clicking a suggested question or selecting a member to get started</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input Area -->
+                    <div class="border-t border-gray-200 p-4 bg-gray-50">
+                        <form id="questionForm" onsubmit="askQuestion(event)" class="flex gap-2">
+                            <input
+                                type="text"
+                                id="questionInput"
+                                placeholder="Ask about member preferences, travel plans, dining history..."
+                                class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                autocomplete="off"
+                            >
+                            <button
+                                type="submit"
+                                id="askButton"
+                                class="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition font-medium"
+                            >
+                                <i class="fas fa-paper-plane mr-2"></i>Ask
+                            </button>
+                        </form>
+                        <div class="mt-2 text-xs text-gray-500 flex items-center">
+                            <i class="fas fa-shield-alt mr-1"></i>
+                            <span>Powered by GPT-4o-mini • Data processed securely</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Modal -->
+    <div id="statsModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50" onclick="hideStats(event)">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-2xl w-full mx-4" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">System Statistics</h2>
+                <button onclick="hideStats()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div id="statsContent">
+                Loading...
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

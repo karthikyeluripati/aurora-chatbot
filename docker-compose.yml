@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  aurora-qa:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - MESSAGES_API_URL=https://november7-730026606190.europe-west1.run.app/messages/
+      - HOST=0.0.0.0
+      - PORT=8000
+    restart: unless-stopped
