@@ -4,8 +4,8 @@ Natural language question-answering API for luxury concierge member data, powere
 
 ## 🚀 Live Demo
 
-- **Backend API**: https://your-backend-url.onrender.com
-- **Web Interface**: https://your-frontend-url.vercel.app
+- **Backend API**: https://aurora-chatbot-7lwl.onrender.com
+- **Web Interface**: https://aurora-frontend-dpy1s6051-karthiks-projects-3cfa896a.vercel.app/
 
 ## API Endpoint
 
@@ -285,4 +285,3 @@ aurora-chatbot/
 
 ---
 
-**Built for Aurora Chatbot Challenge** | MIT License
